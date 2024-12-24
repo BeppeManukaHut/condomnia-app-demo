@@ -38,7 +38,7 @@ export function PaymentFormWrapper() {
   const initialAmount = searchParams.get('amount')
 
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'loading' | 'success'>('idle')
-  const [paymentDetails, setPaymentDetails] = useState<{ invoiceNumber: string, amount: string } | null>(null)
+  const [paymentDetails, setPaymentDetails] = useState<{ invoiceDescription: string, amount: string } | null>(null)
   const [selectedInvoice, setSelectedInvoice] = useState<typeof outstandingInvoices[0] | null>(
     initialInvoiceId ? outstandingInvoices.find(inv => inv.id === initialInvoiceId) || null : null
   )
@@ -50,7 +50,7 @@ export function PaymentFormWrapper() {
       if (result.success) {
         setPaymentStatus('success')
         setPaymentDetails({
-          invoiceNumber: formData.get('invoiceNumber') as string,
+          invoiceDescription: formData.get('invoiceDescription') as string,
           amount: formData.get('amount') as string
         })
       } else {
@@ -65,7 +65,7 @@ export function PaymentFormWrapper() {
 
   const handleSendEmail = async (email: string) => {
     if (paymentDetails) {
-      await sendConfirmationEmail(email, paymentDetails.invoiceNumber, paymentDetails.amount)
+      await sendConfirmationEmail(email, paymentDetails.invoiceDescription, paymentDetails.amount)
     }
   }
 
@@ -80,7 +80,7 @@ export function PaymentFormWrapper() {
   if (paymentStatus === 'success' && paymentDetails) {
     return (
       <PaymentConfirmationPage 
-        invoiceNumber={paymentDetails.invoiceNumber} 
+        invoiceDescription={paymentDetails.invoiceDescription} 
         amount={paymentDetails.amount}
         onSendEmail={handleSendEmail}
       />
@@ -90,7 +90,7 @@ export function PaymentFormWrapper() {
   return (
     <div className="space-y-8">
       <PaymentForm 
-        prefilledInvoice={selectedInvoice?.id || initialInvoiceId} 
+        prefilledInvoice={selectedInvoice?.description || ''} 
         prefilledAmount={selectedInvoice?.amount || initialAmount} 
         onSubmit={handleSubmit} 
       />
