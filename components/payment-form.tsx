@@ -14,15 +14,55 @@ interface PaymentFormProps {
 
 export function PaymentForm({ prefilledInvoice, prefilledAmount, onSubmit }: PaymentFormProps) {
   const [invoiceNumber, setInvoiceNumber] = useState(prefilledInvoice || "")
-  const [amount, setAmount] = useState(prefilledAmount?.replace(/[^0-9.,]/g, '') || "")
+  const [amount, setAmount] = useState(prefilledAmount ? parseFloat(prefilledAmount.replace(/[^0-9.,]/g, '').replace(',', '.')).toFixed(2) : "")
+  const [cardNumber, setCardNumber] = useState("")
+  const [expiryDate, setExpiryDate] = useState("")
+  const [cvv, setCvv] = useState("")
 
   useEffect(() => {
     if (prefilledInvoice) setInvoiceNumber(prefilledInvoice)
-    if (prefilledAmount) setAmount(prefilledAmount.replace(/[^0-9.,]/g, ''))
+    if (prefilledAmount) {
+      const cleanAmount = prefilledAmount.replace(/[^0-9.,]/g, '').replace(',', '.')
+      setAmount(parseFloat(cleanAmount).toFixed(2))
+    }
   }, [prefilledInvoice, prefilledAmount])
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.')
+    if (value === "" || /^\d{1,}(\.\d{0,2})?$/.test(value)) {
+      setAmount(value)
+    }
+  }
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\s/g, '')
+    if (value.length <= 16 && /^\d*$/.test(value)) {
+      setCardNumber(value.replace(/(.{4})/g, '$1 ').trim())
+    }
+  }
+
+  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '')
+    if (value.length <= 4) {
+      setExpiryDate(value.replace(/^(\d{2})/, '$1/'))
+    }
+  }
+
+  const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '')
+    if (value.length <= 3) {
+      setCvv(value)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    onSubmit(formData)
+  }
+
   return (
-    <form action={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
           <CardTitle>Dettagli Pagamento</CardTitle>
@@ -45,27 +85,45 @@ export function PaymentForm({ prefilledInvoice, prefilledAmount, onSubmit }: Pay
             <Input 
               id="amount" 
               name="amount"
-              value={amount} 
-              onChange={(e) => setAmount(e.target.value)} 
-              placeholder="0.00" 
-              type="number" 
-              step="0.01" 
-              min="0" 
+              value={amount ? `€${amount}` : ''} 
+              onChange={handleAmountChange} 
+              placeholder="€0.00" 
               required 
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="cardNumber">Numero Carta</Label>
-            <Input id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required />
+            <Input 
+              id="cardNumber" 
+              name="cardNumber" 
+              value={cardNumber}
+              onChange={handleCardNumberChange}
+              placeholder="1234 5678 9012 3456" 
+              required 
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="expiryDate">Data di Scadenza</Label>
-              <Input id="expiryDate" name="expiryDate" placeholder="MM/YY" required />
+              <Input 
+                id="expiryDate" 
+                name="expiryDate" 
+                value={expiryDate}
+                onChange={handleExpiryDateChange}
+                placeholder="MM/YY" 
+                required 
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="cvv">CVV</Label>
-              <Input id="cvv" name="cvv" placeholder="123" required />
+              <Input 
+                id="cvv" 
+                name="cvv" 
+                value={cvv}
+                onChange={handleCvvChange}
+                placeholder="123" 
+                required 
+              />
             </div>
           </div>
         </CardContent>
