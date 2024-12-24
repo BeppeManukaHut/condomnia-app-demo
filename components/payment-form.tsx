@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,6 +15,11 @@ interface PaymentFormProps {
 export function PaymentForm({ prefilledInvoice, prefilledAmount, onSubmit }: PaymentFormProps) {
   const [invoiceNumber, setInvoiceNumber] = useState(prefilledInvoice || "")
   const [amount, setAmount] = useState(prefilledAmount?.replace(/[^0-9.,]/g, '') || "")
+
+  useEffect(() => {
+    if (prefilledInvoice) setInvoiceNumber(prefilledInvoice)
+    if (prefilledAmount) setAmount(prefilledAmount.replace(/[^0-9.,]/g, ''))
+  }, [prefilledInvoice, prefilledAmount])
 
   return (
     <form action={onSubmit}>
