@@ -8,12 +8,12 @@ import { Label } from "@/components/ui/label"
 import { CheckCircle2 } from 'lucide-react'
 
 interface PaymentConfirmationPageProps {
-  invoiceNumber: string
+  invoiceDescription: string
   amount: string
   onSendEmail: (email: string) => Promise<void>
 }
 
-export function PaymentConfirmationPage({ invoiceNumber, amount, onSendEmail }: PaymentConfirmationPageProps) {
+export function PaymentConfirmationPage({ invoiceDescription, amount, onSendEmail }: PaymentConfirmationPageProps) {
   const [email, setEmail] = useState("")
   const [emailSent, setEmailSent] = useState(false)
 
@@ -33,8 +33,8 @@ export function PaymentConfirmationPage({ invoiceNumber, amount, onSendEmail }: 
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <p><strong>Numero Fattura:</strong> {invoiceNumber}</p>
-          <p><strong>Importo Pagato:</strong> €{amount}</p>
+          <p><strong>Descrizione Fattura:</strong> {invoiceDescription}</p>
+          <p><strong>Importo Pagato:</strong> {amount}</p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Invia conferma via email</Label>
