@@ -53,7 +53,7 @@ export function DashboardNav({ className, ...props }: DashboardNavProps) {
       {...props}
     >
       <div className="flex h-14 items-center border-b px-4 lg:justify-between">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/dashboard" className="flex items-center space-x-2">
           <span className="font-bold">Gestione Condominio</span>
         </Link>
         <Button
