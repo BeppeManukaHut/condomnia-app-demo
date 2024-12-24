@@ -7,20 +7,20 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
 interface PaymentFormProps {
-  prefilledInvoice?: string | null
+  prefilledInvoice?: string
   prefilledAmount?: string | null
   onSubmit: (formData: FormData) => Promise<void>
 }
 
 export function PaymentForm({ prefilledInvoice, prefilledAmount, onSubmit }: PaymentFormProps) {
-  const [invoiceNumber, setInvoiceNumber] = useState(prefilledInvoice || "")
+  const [invoiceDescription, setInvoiceDescription] = useState(prefilledInvoice || "")
   const [amount, setAmount] = useState(prefilledAmount ? parseFloat(prefilledAmount.replace(/[^0-9.,]/g, '').replace(',', '.')).toFixed(2) : "")
   const [cardNumber, setCardNumber] = useState("")
   const [expiryDate, setExpiryDate] = useState("")
   const [cvv, setCvv] = useState("")
 
   useEffect(() => {
-    if (prefilledInvoice) setInvoiceNumber(prefilledInvoice)
+    if (prefilledInvoice) setInvoiceDescription(prefilledInvoice)
     if (prefilledAmount) {
       const cleanAmount = prefilledAmount.replace(/[^0-9.,]/g, '').replace(',', '.')
       setAmount(parseFloat(cleanAmount).toFixed(2))
@@ -66,17 +66,17 @@ export function PaymentForm({ prefilledInvoice, prefilledAmount, onSubmit }: Pay
       <Card>
         <CardHeader>
           <CardTitle>Dettagli Pagamento</CardTitle>
-          <CardDescription>Inserisci i dettagli della carta, il numero di fattura e l'importo.</CardDescription>
+          <CardDescription>Inserisci i dettagli della carta, la descrizione della fattura e l'importo.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="invoiceNumber">Numero Fattura</Label>
+            <Label htmlFor="invoiceDescription">Descrizione Fattura</Label>
             <Input 
-              id="invoiceNumber" 
-              name="invoiceNumber"
-              value={invoiceNumber} 
-              onChange={(e) => setInvoiceNumber(e.target.value)} 
-              placeholder="INV-0001" 
+              id="invoiceDescription" 
+              name="invoiceDescription"
+              value={invoiceDescription} 
+              onChange={(e) => setInvoiceDescription(e.target.value)} 
+              placeholder="Descrizione della fattura" 
               required 
             />
           </div>
