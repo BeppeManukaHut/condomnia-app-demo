@@ -1,24 +1,20 @@
+"use client"
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 
 const MyComponent = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const [invoiceId, setInvoiceId] = useState(null);
   const [amount, setAmount] = useState(null);
 
   useEffect(() => {
-    // ... other code ...
-
     const initialInvoiceId = searchParams?.get('invoice') ?? null;
     const initialAmount = searchParams?.get('amount') ?? null;
 
     setInvoiceId(initialInvoiceId);
     setAmount(initialAmount);
+  }, []);
 
-    // ... other code ...
-  }, [searchParams]);
-
-  // ... rest of component code ...
   return (
     <div>
       {/* ... JSX ... */}
