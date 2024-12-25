@@ -139,7 +139,7 @@ export function PaymentForm() {
                     placeholder="123"
                     maxLength={4}
                     onChange={(e) => {
-                      e.target.value = e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
+                      e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
                       field.onChange(e);
                     }}
                     {...field}
