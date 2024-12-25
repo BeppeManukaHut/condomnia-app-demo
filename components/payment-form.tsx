@@ -1,9 +1,6 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-
+import React from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -16,6 +13,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
+
+// Use the global variables provided by the CDN links
+const { useForm } = (window as any).ReactHookForm;
+const { zodResolver } = (window as any).hookformResolvers.zod;
+const z = (window as any).zod;
 
 const formSchema = z.object({
   cardHolder: z.string().min(2, {
@@ -42,7 +44,7 @@ const formatExpiryDate = (value: string) => {
 
 export function PaymentForm() {
   const { toast } = useToast()
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       cardHolder: "",
@@ -52,7 +54,7 @@ export function PaymentForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: any) {
     toast({
       title: "Pagamento inviato",
       description: (
