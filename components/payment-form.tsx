@@ -1,38 +1,17 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
   FormDescription,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
-
-// Use the global variables provided by the CDN links
-const { useForm } = (window as any).ReactHookForm;
-const { zodResolver } = (window as any).hookformResolvers.zod;
-const z = (window as any).zod;
-
-const formSchema = z.object({
-  cardHolder: z.string().min(2, {
-    message: "Il nome del titolare deve essere di almeno 2 caratteri.",
-  }),
-  cardNumber: z.string().regex(/^(\d{4}\s?){4}$/, {
-    message: "Inserisci un numero di carta valido.",
-  }),
-  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, {
-    message: "Inserisci una data di scadenza valida (MM/YY).",
-  }),
-  cvv: z.string().regex(/^\d{3,4}$/, {
-    message: "Inserisci un CVV valido (3 o 4 cifre).",
-  }),
-})
 
 const formatExpiryDate = (value: string) => {
   const cleanValue = value.replace(/[^\d]/g, '').slice(0, 4);
@@ -44,116 +23,140 @@ const formatExpiryDate = (value: string) => {
 
 export function PaymentForm() {
   const { toast } = useToast()
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      cardHolder: "",
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-    },
+  const [formData, setFormData] = useState({
+    cardHolder: "",
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+  })
+  const [errors, setErrors] = useState({
+    cardHolder: "",
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
   })
 
-  function onSubmit(values: any) {
-    toast({
-      title: "Pagamento inviato",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (formData.cardHolder.length < 2) {
+      newErrors.cardHolder = "Il nome del titolare deve essere di almeno 2 caratteri.";
+      isValid = false;
+    } else {
+      newErrors.cardHolder = "";
+    }
+
+    if (!/^(\d{4}\s?){4}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
+      newErrors.cardNumber = "Inserisci un numero di carta valido.";
+      isValid = false;
+    } else {
+      newErrors.cardNumber = "";
+    }
+
+    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
+      newErrors.expiryDate = "Inserisci una data di scadenza valida (MM/YY).";
+      isValid = false;
+    } else {
+      newErrors.expiryDate = "";
+    }
+
+    if (!/^\d{3,4}$/.test(formData.cvv)) {
+      newErrors.cvv = "Inserisci un CVV valido (3 o 4 cifre).";
+      isValid = false;
+    } else {
+      newErrors.cvv = "";
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    let formattedValue = value;
+
+    if (name === 'cardNumber') {
+      formattedValue = value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim().slice(0, 19);
+    } else if (name === 'expiryDate') {
+      formattedValue = formatExpiryDate(value);
+    } else if (name === 'cvv') {
+      formattedValue = value.replace(/[^\d]/g, '').slice(0, 4);
+    }
+
+    setFormData(prev => ({ ...prev, [name]: formattedValue }));
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      toast({
+        title: "Pagamento inviato",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(formData, null, 2)}</code>
+          </pre>
+        ),
+      })
+    }
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="cardHolder"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Titolare della Carta</FormLabel>
-              <FormControl>
-                <Input placeholder="Mario Rossi" {...field} />
-              </FormControl>
-              <FormDescription>
-                Inserisci il nome come appare sulla carta.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="cardNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Numero della Carta</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="1234 5678 9012 3456"
-                  maxLength={19}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\s/g, '');
-                    if (value.length <= 16) {
-                      e.target.value = value.replace(/(.{4})/g, '$1 ').trim();
-                      field.onChange(e);
-                    }
-                  }}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex space-x-4">
-          <FormField
-            control={form.control}
-            name="expiryDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Data di Scadenza</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="MM/YY"
-                    maxLength={5}
-                    onChange={(e) => {
-                      e.target.value = formatExpiryDate(e.target.value);
-                      field.onChange(e);
-                    }}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+    <Form onSubmit={handleSubmit}>
+      <FormItem>
+        <FormLabel>Titolare della Carta</FormLabel>
+        <FormControl>
+          <Input
+            name="cardHolder"
+            placeholder="Mario Rossi"
+            value={formData.cardHolder}
+            onChange={handleInputChange}
           />
-          <FormField
-            control={form.control}
-            name="cvv"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CVV</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="123"
-                    maxLength={4}
-                    onChange={(e) => {
-                      e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
-                      field.onChange(e);
-                    }}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        </FormControl>
+        <FormDescription>
+          Inserisci il nome come appare sulla carta.
+        </FormDescription>
+        {errors.cardHolder && <FormMessage>{errors.cardHolder}</FormMessage>}
+      </FormItem>
+      <FormItem>
+        <FormLabel>Numero della Carta</FormLabel>
+        <FormControl>
+          <Input
+            name="cardNumber"
+            placeholder="1234 5678 9012 3456"
+            value={formData.cardNumber}
+            onChange={handleInputChange}
           />
-        </div>
-        <Button type="submit">Invia Pagamento</Button>
-      </form>
+        </FormControl>
+        {errors.cardNumber && <FormMessage>{errors.cardNumber}</FormMessage>}
+      </FormItem>
+      <div className="flex space-x-4">
+        <FormItem>
+          <FormLabel>Data di Scadenza</FormLabel>
+          <FormControl>
+            <Input
+              name="expiryDate"
+              placeholder="MM/YY"
+              value={formData.expiryDate}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          {errors.expiryDate && <FormMessage>{errors.expiryDate}</FormMessage>}
+        </FormItem>
+        <FormItem>
+          <FormLabel>CVV</FormLabel>
+          <FormControl>
+            <Input
+              name="cvv"
+              placeholder="123"
+              value={formData.cvv}
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          {errors.cvv && <FormMessage>{errors.cvv}</FormMessage>}
+        </FormItem>
+      </div>
+      <Button type="submit">Invia Pagamento</Button>
     </Form>
   )
 }
