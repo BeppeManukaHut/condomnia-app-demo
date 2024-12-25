@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
   cardHolder: z.string().min(2, {
@@ -41,6 +41,7 @@ const formatExpiryDate = (value: string) => {
 };
 
 export function PaymentForm() {
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -138,7 +139,7 @@ export function PaymentForm() {
                     placeholder="123"
                     maxLength={4}
                     onChange={(e) => {
-                      e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
+                      e.target.value = e.target.value = e.target.value.replace(/[^\d]/g, '').slice(0, 4);
                       field.onChange(e);
                     }}
                     {...field}
