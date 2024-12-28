@@ -166,7 +166,7 @@ export function ComunicazioniImportanti() {
           onClose={() => setSelectedCommunication(null)}
           communication={{
             ...selectedCommunication,
-            content: selectedCommunication.content // Replace with actual content
+            content: selectedCommunication?.content || ''  // Add fallback empty string
           }}
         />
       )}
