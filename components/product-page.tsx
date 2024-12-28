@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { RedeemModal } from "@/components/redeem-modal"
 import { useState } from "react"
