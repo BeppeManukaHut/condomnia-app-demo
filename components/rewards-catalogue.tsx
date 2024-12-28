@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { RedeemModal } from "@/components/redeem-modal"
-import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
 import Image from "next/image"
 import Link from "next/link"
+import { Toaster } from "@/components/ui/toaster"
 
 const categories = [
   { id: "gift-cards", name: "Gift Cards" },
@@ -87,9 +88,14 @@ export function RewardsCatalogue() {
   const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
   const [selectedReward, setSelectedReward] = useState<typeof rewards[0] | null>(null)
   const userPoints = 7500 // This would normally be fetched from an API
+  const { toast } = useToast()
 
   const handleRedeemClick = (reward: typeof rewards[0]) => {
     setSelectedReward(reward)
+    toast({
+      title: "Riscatto premio",
+      description: `Hai selezionato ${reward.name}. Conferma per procedere.`,
+    })
   }
 
   const handleCloseModal = () => {
