@@ -7,6 +7,9 @@ import { RecentTickets } from "@/components/recent-tickets"
 import { UsefulArticles } from "@/components/useful-articles"
 import { ProfileCompletionCard } from "@/components/profile-completion-card"
 
+// Mark the page as dynamic to avoid static generation issues
+export const dynamic = 'force-dynamic'
+
 export default function DashboardPage() {
   return (
     <DashboardShell>
