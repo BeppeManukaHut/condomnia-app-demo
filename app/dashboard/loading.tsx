@@ -12,29 +12,17 @@ export default function DashboardLoading() {
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-5 w-[200px]" />
-          <Skeleton className="h-4 w-[300px]" />
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-[200px] w-full" />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-5 w-[250px]" />
-          <Skeleton className="h-4 w-[350px]" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <Skeleton className="h-[100px] w-full" />
-            <Skeleton className="h-[100px] w-full" />
-            <Skeleton className="h-[100px] w-full" />
-          </div>
-        </CardContent>
-      </Card>
+      {[1, 2, 3, 4].map((i) => (
+        <Card key={i}>
+          <CardHeader>
+            <Skeleton className="h-5 w-[200px] mb-2" />
+            <Skeleton className="h-4 w-[300px]" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-[200px] w-full" />
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }
