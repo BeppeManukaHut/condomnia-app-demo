@@ -15,9 +15,17 @@ async function generateIcons() {
   for (const { name, size } of sizes) {
     const outputFile = path.join(process.cwd(), 'public', name)
     
-    await sharp(inputFile)
-      .resize(size, size)
-      .toFile(outputFile)
+    if (name === 'favicon.ico') {
+      await sharp(inputFile)
+        .resize(size, size)
+        .toFormat('ico')
+        .toFile(outputFile)
+    } else {
+      await sharp(inputFile)
+        .resize(size, size)
+        .png()
+        .toFile(outputFile)
+    }
     
     console.log(`Generated ${name}`)
   }
