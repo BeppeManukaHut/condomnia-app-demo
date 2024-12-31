@@ -18,30 +18,35 @@ export default function Error({
   }, [error])
 
   return (
-    <Card className="mx-auto max-w-md mt-8">
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 text-destructive" />
-          <CardTitle>Qualcosa è andato storto</CardTitle>
-        </div>
-        <CardDescription>
-          Si è verificato un errore durante il caricamento della dashboard.
-          {error.digest && (
-            <span className="block mt-1">
-              Codice errore: {error.digest}
-            </span>
-          )}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Button
-          onClick={() => reset()}
-          className="w-full"
-        >
-          Riprova
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="container mx-auto px-4 py-8">
+      <Card className="mx-auto max-w-md">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-destructive" />
+            <CardTitle>Si è verificato un errore</CardTitle>
+          </div>
+          <CardDescription>
+            Si è verificato un errore durante il caricamento della dashboard.
+            {error.digest && (
+              <span className="block mt-1 font-mono text-xs">
+                Codice errore: {error.digest}
+              </span>
+            )}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <p className="text-sm text-muted-foreground">
+            Stiamo lavorando per risolvere il problema. Riprova tra qualche istante.
+          </p>
+          <Button
+            onClick={() => reset()}
+            className="w-full"
+          >
+            Riprova
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
