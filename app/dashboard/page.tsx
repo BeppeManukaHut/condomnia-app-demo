@@ -7,26 +7,12 @@ import { ComunicazioniImportanti } from "@/components/comunicazioni-importanti"
 import { RecentTickets } from "@/components/recent-tickets"
 import { UsefulArticles } from "@/components/useful-articles"
 import { ProfileCompletionCard } from "@/components/profile-completion-card"
+import { ErrorBoundary } from "@/components/error-boundary"
 import DashboardLoading from "./loading"
-import { ErrorBoundary } from 'react-error-boundary'
 
 // Mark as dynamic to prevent static optimization issues
 export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'
-
-function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Errore di caricamento</CardTitle>
-        <CardDescription>Si è verificato un errore durante il caricamento di questa sezione.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Button onClick={resetErrorBoundary}>Riprova</Button>
-      </CardContent>
-    </Card>
-  )
-}
 
 export default function DashboardPage() {
   return (
@@ -38,13 +24,13 @@ export default function DashboardPage() {
             text="Benvenuto nella tua gestione del condominio" 
           />
           
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ErrorBoundary>
             <Suspense fallback={<div className="animate-pulse h-24 bg-muted rounded-lg" />}>
               <ProfileCompletionCard />
             </Suspense>
           </ErrorBoundary>
           
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ErrorBoundary>
             <Suspense fallback={
               <Card>
                 <CardHeader>
@@ -70,7 +56,7 @@ export default function DashboardPage() {
             </Suspense>
           </ErrorBoundary>
 
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ErrorBoundary>
             <Suspense fallback={
               <Card>
                 <CardHeader>
@@ -96,7 +82,7 @@ export default function DashboardPage() {
             </Suspense>
           </ErrorBoundary>
 
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ErrorBoundary>
             <Suspense fallback={
               <Card>
                 <CardHeader>
@@ -120,7 +106,7 @@ export default function DashboardPage() {
             </Suspense>
           </ErrorBoundary>
 
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ErrorBoundary>
             <Suspense fallback={
               <Card>
                 <CardHeader>
