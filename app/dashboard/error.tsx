@@ -36,7 +36,8 @@ export default function Error({
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            Stiamo lavorando per risolvere il problema. Riprova tra qualche istante.
+            Abbiamo riscontrato un problema durante il caricamento dei dati. 
+            Questo potrebbe essere dovuto a una connessione instabile o a un problema temporaneo del server.
           </p>
           <Button
             onClick={() => reset()}
