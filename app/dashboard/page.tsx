@@ -6,13 +6,19 @@ import { ComunicazioniImportanti } from "@/components/comunicazioni-importanti"
 import { RecentTickets } from "@/components/recent-tickets"
 import { UsefulArticles } from "@/components/useful-articles"
 import { ProfileCompletionCard } from "@/components/profile-completion-card"
+import { Suspense } from 'react'
 
-// Mark the page as dynamic to avoid static generation issues
-export const dynamic = 'force-dynamic'
+// Remove or modify this line if present
+// export const dynamic = 'force-dynamic'
+
+// Replace with
+export const dynamic = 'auto'
+export const revalidate = 0
 
 export default function DashboardPage() {
   return (
     <DashboardShell>
+      <Suspense fallback={<div>Loading...</div>}>
       <DashboardHeader heading="Ciao Giacomo!" text="Benvenuto nella tua gestione del condominio" />
       <ProfileCompletionCard />
       <Card>
@@ -64,6 +70,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      </Suspense>
     </DashboardShell>
   )
 }
