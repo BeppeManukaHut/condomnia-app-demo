@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from 'lucide-react'
-import { useMediaQuery } from "@/hooks/use-media-query"
 
 const tickets = [
   {
@@ -26,7 +25,6 @@ const tickets = [
 ]
 
 export function RecentTickets() {
-  const isMobile = useMediaQuery("(max-width: 640px)")
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
