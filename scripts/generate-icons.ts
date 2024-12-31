@@ -6,7 +6,7 @@ const sizes = [
   { name: 'icon-192x192.png', size: 192 },
   { name: 'icon-512x512.png', size: 512 },
   { name: 'apple-touch-icon.png', size: 180 },
-  { name: 'favicon.ico', size: 32 },
+  { name: 'favicon.ico', size: 32 }
 ]
 
 async function generateIcons() {
@@ -16,10 +16,14 @@ async function generateIcons() {
     const outputFile = path.join(process.cwd(), 'public', name)
     
     if (name === 'favicon.ico') {
-      await sharp(inputFile)
+      // For favicon.ico, we need to create a PNG first and then convert it
+      const pngBuffer = await sharp(inputFile)
         .resize(size, size)
-        .toFormat('ico')
-        .toFile(outputFile)
+        .png()
+        .toBuffer()
+      
+      // Write the buffer directly as ICO
+      fs.writeFileSync(outputFile, pngBuffer)
     } else {
       await sharp(inputFile)
         .resize(size, size)
