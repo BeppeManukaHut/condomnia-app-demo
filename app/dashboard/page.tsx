@@ -8,9 +8,25 @@ import { RecentTickets } from "@/components/recent-tickets"
 import { UsefulArticles } from "@/components/useful-articles"
 import { ProfileCompletionCard } from "@/components/profile-completion-card"
 import DashboardLoading from "./loading"
+import { ErrorBoundary } from 'react-error-boundary'
 
 // Mark as dynamic to prevent static optimization issues
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+
+function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Errore di caricamento</CardTitle>
+        <CardDescription>Si è verificato un errore durante il caricamento di questa sezione.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={resetErrorBoundary}>Riprova</Button>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function DashboardPage() {
   return (
@@ -22,93 +38,113 @@ export default function DashboardPage() {
             text="Benvenuto nella tua gestione del condominio" 
           />
           
-          <ProfileCompletionCard />
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={<div className="animate-pulse h-24 bg-muted rounded-lg" />}>
+              <ProfileCompletionCard />
+            </Suspense>
+          </ErrorBoundary>
           
-          <Suspense fallback={
-            <Card>
-              <CardHeader>
-                <CardTitle className="animate-pulse bg-muted h-4 w-48" />
-                <CardDescription className="animate-pulse bg-muted h-4 w-64" />
-              </CardHeader>
-              <CardContent className="animate-pulse bg-muted h-32" />
-            </Card>
-          }>
-            <Card>
-              <CardHeader>
-                <CardTitle>Pagamenti in Scadenza</CardTitle>
-                <CardDescription>
-                  Hai 1 pagamento in scadenza.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <OutstandingBills />
-              </CardContent>
-            </Card>
-          </Suspense>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={
+              <Card>
+                <CardHeader>
+                  <div className="animate-pulse h-6 w-48 bg-muted rounded mb-2" />
+                  <div className="animate-pulse h-4 w-64 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="animate-pulse h-32 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            }>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pagamenti in Scadenza</CardTitle>
+                  <CardDescription>
+                    Hai 1 pagamento in scadenza.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <OutstandingBills />
+                </CardContent>
+              </Card>
+            </Suspense>
+          </ErrorBoundary>
 
-          <Suspense fallback={
-            <Card>
-              <CardHeader>
-                <CardTitle className="animate-pulse bg-muted h-4 w-48" />
-                <CardDescription className="animate-pulse bg-muted h-4 w-64" />
-              </CardHeader>
-              <CardContent className="animate-pulse bg-muted h-32" />
-            </Card>
-          }>
-            <Card>
-              <CardHeader>
-                <CardTitle>Comunicazioni Importanti</CardTitle>
-                <CardDescription>
-                  Documenti e comunicazioni recenti dal tuo amministratore.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ComunicazioniImportanti />
-              </CardContent>
-            </Card>
-          </Suspense>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={
+              <Card>
+                <CardHeader>
+                  <div className="animate-pulse h-6 w-48 bg-muted rounded mb-2" />
+                  <div className="animate-pulse h-4 w-64 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="animate-pulse h-32 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            }>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Comunicazioni Importanti</CardTitle>
+                  <CardDescription>
+                    Documenti e comunicazioni recenti dal tuo amministratore.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ComunicazioniImportanti />
+                </CardContent>
+              </Card>
+            </Suspense>
+          </ErrorBoundary>
 
-          <Suspense fallback={
-            <Card>
-              <CardHeader>
-                <CardDescription className="animate-pulse bg-muted h-4 w-64" />
-              </CardHeader>
-              <CardContent className="animate-pulse bg-muted h-32" />
-            </Card>
-          }>
-            <Card>
-              <CardHeader>
-                <CardDescription>
-                  Gestisci i tuoi ticket e creane di nuovi.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RecentTickets />
-              </CardContent>
-            </Card>
-          </Suspense>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={
+              <Card>
+                <CardHeader>
+                  <div className="animate-pulse h-4 w-64 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="animate-pulse h-32 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            }>
+              <Card>
+                <CardHeader>
+                  <CardDescription>
+                    Gestisci i tuoi ticket e creane di nuovi.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RecentTickets />
+                </CardContent>
+              </Card>
+            </Suspense>
+          </ErrorBoundary>
 
-          <Suspense fallback={
-            <Card>
-              <CardHeader>
-                <CardTitle className="animate-pulse bg-muted h-4 w-48" />
-                <CardDescription className="animate-pulse bg-muted h-4 w-64" />
-              </CardHeader>
-              <CardContent className="animate-pulse bg-muted h-32" />
-            </Card>
-          }>
-            <Card>
-              <CardHeader>
-                <CardTitle>Articoli Utili</CardTitle>
-                <CardDescription>
-                  Informazioni e consigli per una migliore gestione del tuo condominio.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <UsefulArticles />
-              </CardContent>
-            </Card>
-          </Suspense>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={
+              <Card>
+                <CardHeader>
+                  <div className="animate-pulse h-6 w-48 bg-muted rounded mb-2" />
+                  <div className="animate-pulse h-4 w-64 bg-muted rounded" />
+                </CardHeader>
+                <CardContent>
+                  <div className="animate-pulse h-32 bg-muted rounded" />
+                </CardContent>
+              </Card>
+            }>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Articoli Utili</CardTitle>
+                  <CardDescription>
+                    Informazioni e consigli per una migliore gestione del tuo condominio.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <UsefulArticles />
+                </CardContent>
+              </Card>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </Suspense>
     </DashboardShell>
