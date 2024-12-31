@@ -29,12 +29,12 @@ export function RecentTickets() {
   const isMobile = useMediaQuery("(max-width: 640px)")
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <h2 className="text-2xl font-bold">Ticket Recenti</h2>
         <Link href="/dashboard/tickets">
-          <Button size="sm" className={isMobile ? "text-xs px-2 py-1 h-auto" : ""}>
-            <PlusCircle className={`mr-1 ${isMobile ? "h-3 w-3" : "h-4 w-4"}`} />
-            {isMobile ? "Nuovo Ticket" : "Crea Nuovo Ticket"}
+          <Button size="sm" className="w-full sm:w-auto">
+            <PlusCircle className="mr-1 h-4 w-4" />
+            Nuovo Ticket
           </Button>
         </Link>
       </div>
