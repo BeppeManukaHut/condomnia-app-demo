@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-placeholder-icon": "ts-node --project tsconfig.node.json scripts/create-placeholder-icon.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
