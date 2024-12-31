@@ -7,7 +7,7 @@ const textColor = '#ffffff'
 const svg = `
 <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
   <rect width="100%" height="100%" fill="${backgroundColor}"/>
-  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="200" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">C</text>
+  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="400" font-weight="bold" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">C</text>
 </svg>
 `
 
