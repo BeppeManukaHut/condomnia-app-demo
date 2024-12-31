@@ -66,11 +66,43 @@ export function UsefulArticles() {
     }
     checkIsMobile()
     window.addEventListener('resize', checkIsMobile)
-    return () => window.removeEventListener('resize', checkIsMobile)
+
+    // Add custom styles for Swiper pagination
+    const style = document.createElement('style')
+    style.textContent = `
+      .swiper-pagination {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+      }
+      .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        margin: 0 4px;
+        background-color: #ccc;
+        border-radius: 50%;
+        opacity: 0.5;
+        cursor: pointer;
+      }
+      .swiper-pagination-bullet-active {
+        opacity: 1;
+        background-color: #000;
+      }
+    `
+    document.head.appendChild(style)
+
+    return () => {
+      window.removeEventListener('resize', checkIsMobile)
+      document.head.removeChild(style)
+    }
   }, [])
 
   const ArticleCard = ({ article, index }: { article: typeof articles[0], index: number }) => (
-    <Card className="flex flex-col h-full">
+    <Card className="flex flex-col h-full mb-4">
       <CardHeader className="p-0">
         <div className="relative w-full pt-[56.25%]">
           <Image
@@ -96,18 +128,26 @@ export function UsefulArticles() {
 
   if (isMobile) {
     return (
-      <Swiper
-        modules={[Pagination]}
-        spaceBetween={20}
-        slidesPerView={1}
-        pagination={{ clickable: true }}
-      >
-        {articles.map((article, index) => (
-          <SwiperSlide key={index}>
-            <ArticleCard article={article} index={index} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <div className="relative pb-4">
+        <Swiper
+          modules={[Pagination]}
+          spaceBetween={20}
+          slidesPerView={1}
+          pagination={{ 
+            clickable: true,
+            el: '.swiper-pagination',
+            type: 'bullets',
+          }}
+          className="mb-8"
+        >
+          {articles.map((article, index) => (
+            <SwiperSlide key={index}>
+              <ArticleCard article={article} index={index} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div className="swiper-pagination absolute bottom-0 left-0 right-0"></div>
+      </div>
     )
   }
 
