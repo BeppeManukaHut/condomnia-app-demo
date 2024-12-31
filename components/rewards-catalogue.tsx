@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast"
 import Image from "next/image"
 import Link from "next/link"
 import { Toaster } from "@/components/ui/toaster"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const categories = [
   { id: "gift-cards", name: "Gift Cards" },
@@ -87,8 +88,18 @@ export const rewards = [
 export function RewardsCatalogue() {
   const [selectedCategory, setSelectedCategory] = useState(categories[0].id)
   const [selectedReward, setSelectedReward] = useState<typeof rewards[0] | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   const userPoints = 7500 // This would normally be fetched from an API
   const { toast } = useToast()
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleRedeemClick = (reward: typeof rewards[0]) => {
     setSelectedReward(reward)
@@ -102,6 +113,33 @@ export function RewardsCatalogue() {
     setSelectedReward(null)
   }
 
+  const RewardCard = ({ reward }: { reward: typeof rewards[0] }) => (
+    <Card key={reward.id}>
+      <CardHeader>
+        <CardTitle className="text-lg">{reward.name}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex justify-center">
+          <Image
+            src={reward.image}
+            alt={reward.name}
+            width={200}
+            height={200}
+            className="rounded-md object-cover"
+          />
+        </div>
+        <p className="mt-2 text-center font-semibold">
+          {reward.points.toLocaleString()} punti
+        </p>
+        <Link href={`/dashboard/rewards/${reward.id}`} passHref>
+          <Button className="w-full mt-4">
+            Dettagli
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
+  )
+
   return (
     <>
       <Card className="w-full">
@@ -110,49 +148,50 @@ export function RewardsCatalogue() {
           <CardDescription>Scegli il tuo premio preferito</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+          {isMobile ? (
+            <div className="space-y-4">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Seleziona una categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="grid gap-4">
+                {rewards
+                  .filter((reward) => reward.category === selectedCategory)
+                  .map((reward) => (
+                    <RewardCard key={reward.id} reward={reward} />
+                  ))}
+              </div>
+            </div>
+          ) : (
+            <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
+              <TabsList className="grid w-full grid-cols-4">
+                {categories.map((category) => (
+                  <TabsTrigger key={category.id} value={category.id}>
+                    {category.name}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
               {categories.map((category) => (
-                <TabsTrigger key={category.id} value={category.id}>
-                  {category.name}
-                </TabsTrigger>
+                <TabsContent key={category.id} value={category.id}>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {rewards
+                      .filter((reward) => reward.category === category.id)
+                      .map((reward) => (
+                        <RewardCard key={reward.id} reward={reward} />
+                      ))}
+                  </div>
+                </TabsContent>
               ))}
-            </TabsList>
-            {categories.map((category) => (
-              <TabsContent key={category.id} value={category.id}>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {rewards
-                    .filter((reward) => reward.category === category.id)
-                    .map((reward) => (
-                      <Card key={reward.id}>
-                        <CardHeader>
-                          <CardTitle className="text-lg">{reward.name}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex justify-center">
-                            <Image
-                              src={reward.image}
-                              alt={reward.name}
-                              width={200}
-                              height={200}
-                              className="rounded-md object-cover"
-                            />
-                          </div>
-                          <p className="mt-2 text-center font-semibold">
-                            {reward.points.toLocaleString()} punti
-                          </p>
-                          <Link href={`/dashboard/rewards/${reward.id}`} passHref>
-                            <Button className="w-full mt-4">
-                              Dettagli
-                            </Button>
-                          </Link>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+            </Tabs>
+          )}
         </CardContent>
       </Card>
       {selectedReward && (
