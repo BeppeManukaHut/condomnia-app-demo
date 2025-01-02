@@ -12,18 +12,26 @@ interface RewardProductPageProps {
 }
 
 export default function RewardProductPage({ params }: RewardProductPageProps) {
+  console.log("Rendering RewardProductPage with params:", params); // Debug log
+
   const productId = parseInt(params.id)
   
+  console.log("Parsed productId:", productId); // Debug log
+
   // Validate productId is a number
   if (isNaN(productId)) {
+    console.log("Invalid productId, calling notFound()"); // Debug log
     notFound()
   }
 
   // Find the product
   const product = rewards.find(r => r.id === productId)
   
+  console.log("Found product:", product); // Debug log
+
   // If product doesn't exist, show 404
   if (!product) {
+    console.log("Product not found, calling notFound()"); // Debug log
     notFound()
   }
 
