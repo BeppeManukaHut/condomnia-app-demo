@@ -38,19 +38,24 @@ export default function RewardProductPage({ params }: RewardProductPageProps) {
   // This would normally be fetched from an API
   const userPoints = 7500;
 
-  return (
-    <DashboardShell>
-      <DashboardHeader
-        heading={product.name}
-        text={`${product.points.toLocaleString()} punti`}
-      />
-      <div className="mt-6">
-        <ProductPage product={product} userPoints={userPoints} />
-      </div>
-      <div className="mt-8">
-        <BackButton href="/dashboard/rewards" label="Torna al catalogo" />
-      </div>
-    </DashboardShell>
-  );
+  try {
+    return (
+      <DashboardShell>
+        <DashboardHeader
+          heading={product.name}
+          text={`${product.points.toLocaleString()} punti`}
+        />
+        <div className="mt-6">
+          <ProductPage product={product} userPoints={userPoints} />
+        </div>
+        <div className="mt-8">
+          <BackButton href="/dashboard/rewards" label="Torna al catalogo" />
+        </div>
+      </DashboardShell>
+    );
+  } catch (error) {
+    console.error("Error rendering RewardProductPage:", error);
+    throw error; // Re-throw the error to be caught by the error boundary
+  }
 }
 
