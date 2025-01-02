@@ -24,6 +24,10 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
 
+  useEffect(() => {
+    console.log("ProductPage mounted with product:", product);
+  }, [product]);
+
   if (!product) {
     console.error("Product is undefined in ProductPage");
     return (
@@ -41,10 +45,6 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
 
   const canRedeem = userPoints >= product.points
 
-  useEffect(() => {
-    console.log("ProductPage mounted with product:", product); // Debug log
-  }, [product]);
-
   return (
     <div className="w-full space-y-8">
       <Card>
@@ -60,7 +60,7 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
                     className="rounded-lg object-cover"
                     priority
                     onError={(e) => {
-                      console.error("Image failed to load:", e); // Debug log
+                      console.error("Image failed to load:", e);
                       setImageError(true);
                     }}
                   />
