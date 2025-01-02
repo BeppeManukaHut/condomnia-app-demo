@@ -3,21 +3,28 @@ import { ProductPage } from "@/components/product-page"
 import DashboardShell from "@/components/dashboard-shell"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { BackButton } from "@/components/back-button"
+import { notFound } from "next/navigation"
 
-export default function RewardProductPage({ params }: { params: { id: string } }) {
+interface RewardProductPageProps {
+  params: {
+    id: string
+  }
+}
+
+export default function RewardProductPage({ params }: RewardProductPageProps) {
   const productId = parseInt(params.id)
   const product = rewards.find(r => r.id === productId)
   const userPoints = 7500 // This would normally be fetched from an API
 
-  if (!product) {
-    return <div>Prodotto non trovato</div>
+  if (!product || isNaN(productId)) {
+    notFound()
   }
 
   return (
     <DashboardShell>
       <DashboardHeader
         heading={product.name}
-        text={`Categoria: ${product.category}`}
+        text={`${product.points.toLocaleString()} punti`}
       />
       <div className="mt-6">
         <ProductPage product={product} userPoints={userPoints} />
