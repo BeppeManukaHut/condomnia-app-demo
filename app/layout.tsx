@@ -7,27 +7,6 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Condomnia - Gestione Condominiale Semplificata',
   description: 'Semplifica la gestione del tuo condominio con Condomnia. Comunicazioni veloci, spese trasparenti e supporto 24/7.',
-  icons: {
-    icon: [
-      {
-        url: '/favicon.ico',
-        sizes: '32x32',
-        type: 'image/x-icon',
-      },
-      {
-        url: '/icon.png',
-        sizes: '192x192',
-        type: 'image/png',
-      },
-    ],
-    apple: [
-      {
-        url: '/apple-icon.png',
-        sizes: '180x180',
-        type: 'image/png',
-      },
-    ],
-  },
   manifest: '/manifest.json',
 }
 
@@ -41,10 +20,7 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#bb78ff" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Condomnia" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>
