@@ -32,6 +32,9 @@ export default function Error({
               Codice errore: {error.digest}
             </span>
           )}
+          <span className="block mt-1 font-mono text-xs text-muted-foreground">
+            Messaggio errore: {error.message}
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
