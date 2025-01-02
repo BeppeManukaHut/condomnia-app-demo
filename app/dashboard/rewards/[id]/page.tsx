@@ -13,12 +13,22 @@ interface RewardProductPageProps {
 
 export default function RewardProductPage({ params }: RewardProductPageProps) {
   const productId = parseInt(params.id)
-  const product = rewards.find(r => r.id === productId)
-  const userPoints = 7500 // This would normally be fetched from an API
-
-  if (!product || isNaN(productId)) {
+  
+  // Validate productId is a number
+  if (isNaN(productId)) {
     notFound()
   }
+
+  // Find the product
+  const product = rewards.find(r => r.id === productId)
+  
+  // If product doesn't exist, show 404
+  if (!product) {
+    notFound()
+  }
+
+  // This would normally be fetched from an API
+  const userPoints = 7500 
 
   return (
     <DashboardShell>
