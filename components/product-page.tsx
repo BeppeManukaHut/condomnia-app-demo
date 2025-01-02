@@ -23,14 +23,9 @@ interface ProductPageProps {
 export function ProductPage({ product, userPoints }: ProductPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
-  const canRedeem = userPoints >= product.points
-
-  useEffect(() => {
-    console.log("ProductPage mounted with product:", product); // Debug log
-  }, [product]);
 
   if (!product) {
-    console.error("Product is undefined in ProductPage"); // Debug log
+    console.error("Product is undefined in ProductPage");
     return (
       <Card>
         <CardContent className="p-6 text-center">
@@ -43,6 +38,12 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
       </Card>
     )
   }
+
+  const canRedeem = userPoints >= product.points
+
+  useEffect(() => {
+    console.log("ProductPage mounted with product:", product); // Debug log
+  }, [product]);
 
   return (
     <div className="w-full space-y-8">
