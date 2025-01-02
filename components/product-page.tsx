@@ -6,6 +6,7 @@ import { RedeemModal } from "@/components/redeem-modal"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { AlertCircle } from 'lucide-react'
 
 interface ProductPageProps {
   product: {
@@ -21,7 +22,22 @@ interface ProductPageProps {
 
 export function ProductPage({ product, userPoints }: ProductPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [imageError, setImageError] = useState(false)
   const canRedeem = userPoints >= product.points
+
+  if (!product) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center">
+          <AlertCircle className="mx-auto h-12 w-12 text-destructive" />
+          <h3 className="mt-4 text-lg font-semibold">Errore di caricamento</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Non è stato possibile caricare i dettagli del premio.
+          </p>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <div className="w-full space-y-8">
@@ -29,14 +45,21 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/2">
-              <div className="relative aspect-square">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="rounded-lg object-cover"
-                  priority
-                />
+              <div className="relative aspect-square bg-muted">
+                {!imageError ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="rounded-lg object-cover"
+                    priority
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <AlertCircle className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="w-full md:w-1/2 space-y-6">
