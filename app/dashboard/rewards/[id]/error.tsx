@@ -14,6 +14,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
+    // Log the error to an error reporting service
     console.error('Product page error:', error)
   }, [error])
 
@@ -27,14 +28,14 @@ export default function Error({
         <CardDescription>
           Non è stato possibile caricare i dettagli del premio.
           {error.digest && (
-            <span className="block mt-1 font-mono text-xs">
+            <span className="block mt-1 font-mono text-xs text-muted-foreground">
               Codice errore: {error.digest}
             </span>
           )}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Button onClick={() => reset()} className="w-full">
+        <Button onClick={reset} className="w-full">
           Riprova
         </Button>
         <Link href="/dashboard/rewards">
