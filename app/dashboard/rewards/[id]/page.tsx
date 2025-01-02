@@ -12,31 +12,31 @@ interface RewardProductPageProps {
 }
 
 export default function RewardProductPage({ params }: RewardProductPageProps) {
-  console.log("Rendering RewardProductPage with params:", params); // Debug log
+  console.log("Rendering RewardProductPage with params:", params);
 
-  const productId = parseInt(params.id)
-  
-  console.log("Parsed productId:", productId); // Debug log
-
-  // Validate productId is a number
-  if (isNaN(productId)) {
-    console.log("Invalid productId, calling notFound()"); // Debug log
-    notFound()
+  if (!params || !params.id) {
+    console.error("Invalid params or missing id");
+    notFound();
   }
 
-  // Find the product
-  const product = rewards.find(r => r.id === productId)
-  
-  console.log("Found product:", product); // Debug log
+  const productId = parseInt(params.id, 10);
+  console.log("Parsed productId:", productId);
 
-  // If product doesn't exist, show 404
+  if (isNaN(productId)) {
+    console.error("Invalid productId, not a number");
+    notFound();
+  }
+
+  const product = rewards.find(r => r.id === productId);
+  console.log("Found product:", product);
+
   if (!product) {
-    console.log("Product not found, calling notFound()"); // Debug log
-    notFound()
+    console.error("Product not found");
+    notFound();
   }
 
   // This would normally be fetched from an API
-  const userPoints = 7500 
+  const userPoints = 7500;
 
   return (
     <DashboardShell>
@@ -51,6 +51,6 @@ export default function RewardProductPage({ params }: RewardProductPageProps) {
         <BackButton href="/dashboard/rewards" label="Torna al catalogo" />
       </div>
     </DashboardShell>
-  )
+  );
 }
 
