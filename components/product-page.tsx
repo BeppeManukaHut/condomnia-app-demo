@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { RedeemModal } from "@/components/redeem-modal"
 import Image from "next/image"
@@ -25,7 +25,12 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
   const [imageError, setImageError] = useState(false)
   const canRedeem = userPoints >= product.points
 
+  useEffect(() => {
+    console.log("ProductPage mounted with product:", product); // Debug log
+  }, [product]);
+
   if (!product) {
+    console.error("Product is undefined in ProductPage"); // Debug log
     return (
       <Card>
         <CardContent className="p-6 text-center">
@@ -53,7 +58,10 @@ export function ProductPage({ product, userPoints }: ProductPageProps) {
                     fill
                     className="rounded-lg object-cover"
                     priority
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                      console.error("Image failed to load:", e); // Debug log
+                      setImageError(true);
+                    }}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">
